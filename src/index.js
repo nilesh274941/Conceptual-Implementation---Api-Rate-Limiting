@@ -23,7 +23,7 @@ const setInitial=()=>{
 //	console.log("----");
 }
 const sec=30;
-app.get("/posts",async (req,res)=>{
+app.get("/api/posts",async (req,res)=>{
 	++count;
 	let noOfPost=10;
 	let gotMax=false;
