@@ -13,18 +13,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
 // your code goes here
-let count=0;
-let timeoutId=null;
-let max=20;
+global.count=0;
+global.timeoutId=null;
+global.max=20;
 const setInitial=()=>{
-	max=20;
-	timeoutId=null;
-	count=0;
+	global.max=20;
+	global.timeoutId=null;
+	global.count=0;
 //	console.log("----");
 }
 const sec=30;
 app.get("/api/posts",async (req,res)=>{
-	++count;
+	++global.count;
 	let noOfPost=10;
 	let gotMax=false;
 	if(req.query.max!=null)
@@ -32,16 +32,20 @@ app.get("/api/posts",async (req,res)=>{
 		const m=Number(req.query.max);
 		if(!isNaN(m))
 		{
-			noOfPost=m.toFixed(0);
+			noOfPost=Number(m.toFixed(0));
 			gotMax=true;
 		}
 	}
 	if(gotMax)
 	{
-		if(noOfPost<max) max=noOfPost;
-		else noOfPost=max;
+		if(noOfPost<global.max){
+			global.max=noOfPost;
+		}
+		else {
+			noOfPost=global.max;
+		}
 	}
-	if(count>5)
+	if(global.count>5)
 	{
 		res.writeHead(429,{
 			"content-type": "application/json"
@@ -51,11 +55,11 @@ app.get("/api/posts",async (req,res)=>{
 	else {
 		const postsToSend=[...posts];
 		postsToSend.splice(noOfPost,posts.length-noOfPost);
-//		console.log(noOfPost,max);
+//		console.log(noOfPost,global.max);
 		res.json(postsToSend);
 	}
-	if(timeoutId==null) {
-		timeoutId=setTimeout(setInitial,sec*1000);
+	if(global.timeoutId==null) {
+		global.timeoutId=setTimeout(setInitial,sec*1000);
 	}
 	res.end();
 });
