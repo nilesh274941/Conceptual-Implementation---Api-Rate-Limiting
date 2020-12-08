@@ -45,7 +45,7 @@ app.get("/api/posts",async (req,res)=>{
 			noOfPost=global.max;
 		}
 	}
-	if(noOfPost>15) noOfPost=15;
+	if(noOfPost>20) noOfPost=20;
 	if(global.count>5)
 	{
 		res.writeHead(429,{
