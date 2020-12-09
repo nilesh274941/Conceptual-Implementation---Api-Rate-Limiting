@@ -15,9 +15,9 @@ app.use(bodyParser.json())
 // your code goes here
 global.count=0;
 global.timeoutId=null;
-global.max=20;
+global.max=21;
 const setInitial=()=>{
-	global.max=20;
+	global.max=21;
 	global.timeoutId=null;
 	global.count=0;
 //	console.log("----");
@@ -38,14 +38,18 @@ app.get("/api/posts",async (req,res)=>{
 	}
 	if(gotMax)
 	{
-		if(noOfPost<global.max){
+		if(noOfPost>20)
+		{
+			if(global.max>20) noOfPost=10;
+			else noOfPost=global.max;			
+		}
+		else if(noOfPost<global.max){
 			global.max=noOfPost;
 		}
 		else {
 			noOfPost=global.max;
 		}
 	}
-	if(noOfPost>20) noOfPost=10;
 	if(global.count>5)
 	{
 		res.writeHead(429,{
@@ -56,7 +60,7 @@ app.get("/api/posts",async (req,res)=>{
 	else {
 		const postsToSend=[...posts];
 		postsToSend.splice(noOfPost,posts.length-noOfPost);
-//		console.log(noOfPost,global.max);
+	//	console.log(noOfPost,global.max);
 		res.json(postsToSend);
 	}
 	if(global.timeoutId==null) {
